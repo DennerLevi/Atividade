@@ -1,7 +1,11 @@
 ﻿
 $(document).ready(function () {
+    $('#CPF').mask('000.000.000-00', { reverse: true });
+
+
     if (obj) {
         $('#formCadastro #Nome').val(obj.Nome);
+        $('#formCadastro #CPF').val(obj.CPF);  
         $('#formCadastro #CEP').val(obj.CEP);
         $('#formCadastro #Email').val(obj.Email);
         $('#formCadastro #Sobrenome').val(obj.Sobrenome);
@@ -20,6 +24,7 @@ $(document).ready(function () {
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
+                "CPF": $(this).find("#CPF").val(),
                 "CEP": $(this).find("#CEP").val(),
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
