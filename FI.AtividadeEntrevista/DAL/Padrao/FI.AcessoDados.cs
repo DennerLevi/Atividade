@@ -11,7 +11,7 @@ namespace FI.AtividadeEntrevista.DAL
         {
             get
             {
-                ConnectionStringSettings conn = ConfigurationManager.ConnectionStrings["3E7ACF423064C0903D83B987AD9E434F_ATORIO\\ENTREVISTA\\FI.WEBATIVIDADEENTREVISTA\\FI.WEBATIVIDADEENTREVISTA\\APP_DATA\\BANCODEDADOS.MDF"];
+                ConnectionStringSettings conn = ConfigurationManager.ConnectionStrings["ConnectString"];
                 if (conn != null)
                     return conn.ConnectionString;
                 else

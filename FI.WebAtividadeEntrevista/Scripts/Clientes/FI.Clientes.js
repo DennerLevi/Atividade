@@ -5,24 +5,24 @@ $(document).ready(function () {
 
         const cpf = $(this).find("#CPF").val();
 
-        if (!validarCPF(cpf)) {
+       /* if (!validarCPF(cpf)) {
             ModalDialog("Erro", "CPF inválido!");
             return; // Não envia o formulário se o CPF for inválido
-        }
+        }*/
         $.ajax({
             url: urlPost,
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
                 "CEP": $(this).find("#CEP").val(),
-                "CPF": $(this).find("#CPF").val(), 
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
                 "Nacionalidade": $(this).find("#Nacionalidade").val(),
                 "Estado": $(this).find("#Estado").val(),
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val()
+                "Telefone": $(this).find("#Telefone").val(),
+                "CPF": $(this).find("#CPF").val(), 
             },
             error:
             function (r) {
@@ -64,6 +64,7 @@ function ModalDialog(titulo, texto) {
     $('body').append(texto);
     $('#' + random).modal('show');
 }
+
 function validarCPF(cpf) {
     cpf = cpf.replace(/[^\d]+/g, ''); // Remove tudo que não for número
 
