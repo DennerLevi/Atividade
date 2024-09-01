@@ -1,14 +1,17 @@
 ﻿
 $(document).ready(function () {
+
+    $('#CPF').mask('000.000.000-00');
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
 
         const cpf = $(this).find("#CPF").val();
 
-       /* if (!validarCPF(cpf)) {
+        if (!validarCPF(cpf)) {
             ModalDialog("Erro", "CPF inválido!");
             return; // Não envia o formulário se o CPF for inválido
-        }*/
+        }
+
         $.ajax({
             url: urlPost,
             method: "POST",
@@ -22,47 +25,50 @@ $(document).ready(function () {
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
                 "Telefone": $(this).find("#Telefone").val(),
-                "CPF": $(this).find("#CPF").val(), 
+                "CPF": cpf.replace(/[^\d]+/g, ''), // Envia o CPF sem formatação
             },
-            error:
-            function (r) {
-                if (r.status == 400)
+            error: function (r) {
+                if (r.status === 400) {
                     ModalDialog("Ocorreu um erro", r.responseJSON);
-                else if (r.status == 500)
+                } else if (r.status === 500) {
                     ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                }
             },
-            success:
-            function (r) {
-                ModalDialog("Sucesso!", r)
+            success: function (r) {
+                ModalDialog("Sucesso!", r);
                 $("#formCadastro")[0].reset();
             }
         });
-    })
-    
-})
+    });
+});
 
 function ModalDialog(titulo, texto) {
-    var random = Math.random().toString().replace('.', '');
-    var texto = '<div id="' + random + '" class="modal fade">                                                               ' +
-        '        <div class="modal-dialog">                                                                                 ' +
-        '            <div class="modal-content">                                                                            ' +
-        '                <div class="modal-header">                                                                         ' +
-        '                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>         ' +
-        '                    <h4 class="modal-title">' + titulo + '</h4>                                                    ' +
-        '                </div>                                                                                             ' +
-        '                <div class="modal-body">                                                                           ' +
-        '                    <p>' + texto + '</p>                                                                           ' +
-        '                </div>                                                                                             ' +
-        '                <div class="modal-footer">                                                                         ' +
-        '                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>             ' +
-        '                                                                                                                   ' +
-        '                </div>                                                                                             ' +
-        '            </div><!-- /.modal-content -->                                                                         ' +
-        '  </div><!-- /.modal-dialog -->                                                                                    ' +
-        '</div> <!-- /.modal -->                                                                                        ';
+    const random = Math.random().toString().replace('.', '');
+    const modalHTML = `
+        <div id="${random}" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">${titulo}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>${texto}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
 
-    $('body').append(texto);
+    $('body').append(modalHTML);
     $('#' + random).modal('show');
+
+    // Remove o modal após ele ser fechado para evitar acúmulo de elementos no DOM
+    $('#' + random).on('hidden.bs.modal', function () {
+        $(this).remove();
+    });
 }
 
 function validarCPF(cpf) {
@@ -72,31 +78,21 @@ function validarCPF(cpf) {
         return false; // Verifica se tem 11 dígitos ou se todos os dígitos são iguais
     }
 
-    // Validação do primeiro dígito
-    let soma = 0;
-    for (let i = 0; i < 9; i++) {
-        soma += parseInt(cpf.charAt(i)) * (10 - i);
-    }
-    let primeiroDigitoVerificador = (soma * 10) % 11;
-    if (primeiroDigitoVerificador === 10 || primeiroDigitoVerificador === 11) {
-        primeiroDigitoVerificador = 0;
-    }
-    if (primeiroDigitoVerificador !== parseInt(cpf.charAt(9))) {
-        return false;
-    }
+    const validarDigito = (base, multiplicadorInicial) => {
+        let soma = 0;
+        for (let i = 0; i < base.length; i++) {
+            soma += parseInt(base.charAt(i)) * (multiplicadorInicial - i);
+        }
+        let digitoVerificador = (soma * 10) % 11;
+        if (digitoVerificador === 10 || digitoVerificador === 11) {
+            digitoVerificador = 0;
+        }
+        return digitoVerificador;
+    };
 
-    // Validação do segundo dígito
-    soma = 0;
-    for (let i = 0; i < 10; i++) {
-        soma += parseInt(cpf.charAt(i)) * (11 - i);
-    }
-    let segundoDigitoVerificador = (soma * 10) % 11;
-    if (segundoDigitoVerificador === 10 || segundoDigitoVerificador === 11) {
-        segundoDigitoVerificador = 0;
-    }
-    if (segundoDigitoVerificador !== parseInt(cpf.charAt(10))) {
-        return false;
-    }
+    const primeiroDigitoVerificador = validarDigito(cpf.substring(0, 9), 10);
+    const segundoDigitoVerificador = validarDigito(cpf.substring(0, 10), 11);
 
-    return true; // CPF válido
+    return primeiroDigitoVerificador === parseInt(cpf.charAt(9)) &&
+        segundoDigitoVerificador === parseInt(cpf.charAt(10));
 }
