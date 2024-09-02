@@ -26,7 +26,13 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Incluir(ClienteModel model)
         {
             BoCliente bo = new BoCliente();
-            
+
+            if (bo.VerificarCPF(model.CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("Este CPF já está cadastrado para outro cliente.");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
@@ -62,7 +68,13 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Alterar(ClienteModel model)
         {
             BoCliente bo = new BoCliente();
-       
+
+            if (bo.VerificarCPF(model.CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("Este CPF já está cadastrado para outro cliente.");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
