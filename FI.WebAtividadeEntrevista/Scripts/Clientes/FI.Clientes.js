@@ -2,12 +2,17 @@
 $(document).ready(function () {
 
     $('#CPF').mask('000.000.000-00');
+    $('#CEP').mask('00000-000');
+    $('#Telefone').mask('(00) 00000-0000');
+
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
 
         const cpf = $(this).find("#CPF").val();
+        const cep = $(this).find("#CEP").val();
+        const telefone = $(this).find("#Telefone").val();
 
-        if (!validarCPF(cpf)) {
+        if (!ValidarCPF(cpf)) {
             ModalDialog("Erro", "CPF inválido!");
             return; // Não envia o formulário se o CPF for inválido
         }
@@ -17,14 +22,14 @@ $(document).ready(function () {
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
-                "CEP": $(this).find("#CEP").val(),
+                "CEP": cep.replace(/[^\d]+/g, ''),
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
                 "Nacionalidade": $(this).find("#Nacionalidade").val(),
                 "Estado": $(this).find("#Estado").val(),
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val(),
+                "Telefone": telefone.replace(/[^\d]+/g, ''), 
                 "CPF": cpf.replace(/[^\d]+/g, ''), // Envia o CPF sem formatação
             },
             error: function (r) {
@@ -71,7 +76,7 @@ function ModalDialog(titulo, texto) {
     });
 }
 
-function validarCPF(cpf) {
+function ValidarCPF(cpf) {
     cpf = cpf.replace(/[^\d]+/g, ''); // Remove tudo que não for número
 
     if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
