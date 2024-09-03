@@ -59,7 +59,6 @@ namespace WebAtividadeEntrevista.Controllers
                     CPF = model.CPF
                 });
 
-           
                 return Json("Cadastro efetuado com sucesso!");
             }
         }
