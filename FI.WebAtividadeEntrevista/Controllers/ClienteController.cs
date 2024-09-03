@@ -27,7 +27,7 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoCliente bo = new BoCliente();
 
-            if (bo.VerificarCPF(model.CPF))
+            if (bo.VerificarCPF(model.CPF, model.Id))
             {
                 Response.StatusCode = 400;
                 return Json("Este CPF já está cadastrado para outro cliente.");
@@ -68,7 +68,7 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoCliente bo = new BoCliente();
 
-            if (bo.VerificarCPF(model.CPF))
+            if (bo.VerificarCPF(model.CPF, model.Id))
             {
                 Response.StatusCode = 400;
                 return Json("Este CPF já está cadastrado para outro cliente.");

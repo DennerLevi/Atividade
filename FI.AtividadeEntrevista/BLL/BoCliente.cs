@@ -73,10 +73,10 @@ namespace FI.AtividadeEntrevista.BLL
         /// </summary>
         /// <param name="CPF"></param>
         /// <returns></returns>
-        public bool VerificarCPF(string CPF)
+        public bool VerificarCPF(string CPF, long Id)
         {
             DAL.DaoCliente cli = new DAL.DaoCliente();
-            return cli.VerificarCPF(CPF);
+            return cli.VerificarCPF(CPF,Id);
         }
     }
 }
