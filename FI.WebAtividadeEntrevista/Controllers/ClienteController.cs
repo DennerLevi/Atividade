@@ -60,7 +60,7 @@ namespace WebAtividadeEntrevista.Controllers
                 });
 
            
-                return Json("Cadastro efetuado com sucesso");
+                return Json("Cadastro efetuado com sucesso!");
             }
         }
 

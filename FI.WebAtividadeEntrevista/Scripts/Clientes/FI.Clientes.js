@@ -30,7 +30,7 @@ $(document).ready(function () {
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
                 "Telefone": telefone.replace(/[^\d]+/g, ''), 
-                "CPF": cpf.replace(/[^\d]+/g, ''), // Envia o CPF sem formatação
+                "CPF": $(this).find("#CPF").val(),
             },
             error: function (r) {
                 if (r.status === 400) {
