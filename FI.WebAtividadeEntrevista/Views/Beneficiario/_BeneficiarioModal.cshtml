@@ -17,35 +17,11 @@
                     <label for="nomeBeneficiario">Nome:</label>
                     <input type="text" class="form-control" id="nomeBeneficiario" placeholder="Ex.: Maria">
                 </div>
-                <button type="button" class="btn btn-success">Incluir</button>
+                <button type="button" class="btn btn-success" onclick="incluirBeneficiario()">Incluir</button>
                 <hr />
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>CPF</th>
-                            <th>Nome</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>000.000.001-91</td>
-                            <td>Beneficiário João</td>
-                            <td>
-                                <button type="button" class="btn btn-primary">Alterar</button>
-                                <button type="button" class="btn btn-danger">Excluir</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>000.000.002-72</td>
-                            <td>Beneficiário José</td>
-                            <td>
-                                <button type="button" class="btn btn-primary">Alterar</button>
-                                <button type="button" class="btn btn-danger">Excluir</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+
+                <!-- Aqui o grid será adicionado dinamicamente -->
+                <div id="beneficiarioGrid"></div>
             </div>
         </div>
     </div>
