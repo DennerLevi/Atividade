@@ -13,9 +13,13 @@ namespace WebAtividadeEntrevista.Controllers
         {
             return View();
         }
+        public ActionResult ListBeneficiario()
+        {
+            return View();
+        }
 
         [HttpGet]
-        public ActionResult Alterar(long id)
+        public ActionResult AlterarBeneficiario(long id)
         {
             BoBeneficiario bo = new BoBeneficiario();
             Beneficiario beneficiario = bo.Consultar(id);
@@ -24,11 +28,9 @@ namespace WebAtividadeEntrevista.Controllers
             if (beneficiario != null)
             {
                 model = new BeneficiarioModel()
-                {
-                    Id = beneficiario.Id,
+                { 
                     CPF = beneficiario.CPF,
                     Nome = beneficiario.Nome,
-                    IdCliente = beneficiario.IdCliente
                 };
             }
 

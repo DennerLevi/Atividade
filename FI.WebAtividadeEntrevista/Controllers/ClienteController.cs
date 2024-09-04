@@ -127,8 +127,6 @@ namespace WebAtividadeEntrevista.Controllers
                     Telefone = cliente.Telefone,
                     CPF = cliente.CPF
                 };
-
-            
             }
 
             return View(model);
