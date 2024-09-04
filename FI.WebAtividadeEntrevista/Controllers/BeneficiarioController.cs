@@ -14,7 +14,7 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Incluir(BeneficiarioModel model)
         {
             BoBeneficiarios bo = new BoBeneficiarios();
-
+             
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
