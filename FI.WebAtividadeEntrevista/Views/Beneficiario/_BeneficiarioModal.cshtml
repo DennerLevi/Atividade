@@ -8,25 +8,30 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="cpfBeneficiario">CPF:</label>
-                    <input type="text" class="form-control" id="cpfBeneficiario" placeholder="Ex.: 010.011.111-00">
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="cpfBeneficiario">CPF:</label>
+                        <input type="text" class="form-control" id="cpfBeneficiario" placeholder="Ex.: 010.011.111-00">
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="nomeBeneficiario">Nome:</label>
+                        <input type="text" class="form-control" id="nomeBeneficiario" placeholder="Ex.: Maria">
+                    </div>
+                    <div class="form-group col-md-2 d-flex align-items-end">
+                        <button id="incluirBeneficiario" class="btn btn-success w-100" type="button">Incluir</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="nomeBeneficiario">Nome:</label>
-                    <input type="text" class="form-control" id="nomeBeneficiario" placeholder="Ex.: Maria">
-                </div>
-                <button id="incluirBeneficiario" class="btn btn-success" type="button">Incluir</button>
-                <hr />
-                <table class="table table-bordered">
-                    <thead>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
                         <tr>
                             <th>CPF</th>
                             <th>Nome</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="gridBeneficiarios"></tbody>
+                    <tbody id="gridBeneficiarios">
+                        <!-- Os dados serão inseridos dinamicamente aqui -->
+                    </tbody>
                 </table>
             </div>
         </div>
