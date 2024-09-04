@@ -214,14 +214,12 @@ namespace WebAtividadeEntrevista.Controllers
             BoCliente bo = new BoCliente();
             Cliente cliente = bo.Consultar(id);
             Models.ClienteModel model = null;
-
-            // Liste os beneficiários associados ao cliente
-            var beneficiarios = new BoBeneficiarios().Listar(id);
-
+            beneficiarios = new BoBeneficiarios().Listar(id);
             if (cliente != null)
             {
                 model = new ClienteModel()
                 {
+                    Id = cliente.Id,
                     CEP = cliente.CEP,
                     CPF = cliente.CPF,
                     Cidade = cliente.Cidade,
@@ -231,21 +229,12 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = cliente.Nacionalidade,
                     Nome = cliente.Nome,
                     Sobrenome = cliente.Sobrenome,
-                    Telefone = cliente.Telefone,
-
-                    // Preencher a lista de beneficiários no model
-                    Beneficiarios = beneficiarios.Select(b => new BeneficiarioModel
-                    {
-                        Id = b.Id,
-                        Nome = b.Nome,
-                        CPF = b.CPF,
-                        IdCliente = b.IdCliente
-                    }).ToList()
+                    Telefone = cliente.Telefone
                 };
             }
-
             return View(model);
         }
+
 
 
         [HttpPost]
