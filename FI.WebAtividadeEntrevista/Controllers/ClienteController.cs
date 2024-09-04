@@ -148,7 +148,7 @@ namespace WebAtividadeEntrevista.Controllers
                                 boBen.Incluir(beneficiario);
                             }
                         }
-                        return Json(new { success = true, message = "Cadastro efetuado com sucesso" });
+                        return Json("Cadastro efetuado com sucesso");
                     }
 
                 }
@@ -214,12 +214,14 @@ namespace WebAtividadeEntrevista.Controllers
             BoCliente bo = new BoCliente();
             Cliente cliente = bo.Consultar(id);
             Models.ClienteModel model = null;
-            beneficiarios = new BoBeneficiarios().Listar(id);
+
+            // Liste os beneficiários associados ao cliente
+            var beneficiarios = new BoBeneficiarios().Listar(id);
+
             if (cliente != null)
             {
                 model = new ClienteModel()
                 {
-                    Id = cliente.Id,
                     CEP = cliente.CEP,
                     CPF = cliente.CPF,
                     Cidade = cliente.Cidade,
@@ -229,13 +231,22 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = cliente.Nacionalidade,
                     Nome = cliente.Nome,
                     Sobrenome = cliente.Sobrenome,
-                    Telefone = cliente.Telefone
-                };
+                    Telefone = cliente.Telefone,
 
+                    // Preencher a lista de beneficiários no model
+                    Beneficiarios = beneficiarios.Select(b => new BeneficiarioModel
+                    {
+                        Id = b.Id,
+                        Nome = b.Nome,
+                        CPF = b.CPF,
+                        IdCliente = b.IdCliente
+                    }).ToList()
+                };
             }
 
             return View(model);
         }
+
 
         [HttpPost]
         public JsonResult ClienteList(int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
