@@ -9,31 +9,30 @@ namespace WebAtividadeEntrevista.Controllers
 {
     public class BeneficiarioController : Controller
     {
-        [HttpPost]
-        public JsonResult Incluir(BeneficiarioModel model)
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Alterar(long id)
         {
             BoBeneficiario bo = new BoBeneficiario();
+            Beneficiario beneficiario = bo.Consultar(id);
+            BeneficiarioModel model = null;
 
-            if (!this.ModelState.IsValid)
+            if (beneficiario != null)
             {
-                List<string> erros = (from item in ModelState.Values
-                                      from error in item.Errors
-                                      select error.ErrorMessage).ToList();
-
-                Response.StatusCode = 400;
-                return Json(string.Join(System.Environment.NewLine, erros));
-            }
-            else
-            {
-                model.Id = bo.Incluir(new Beneficiario()
+                model = new BeneficiarioModel()
                 {
-                    CPF = model.CPF,
-                    Nome = model.Nome,
-                    IdCliente = model.IdCliente
-                });
-
-                return Json(new { success = true, message = "Beneficiário incluído com sucesso!", beneficiarioId = model.Id });
+                    Id = beneficiario.Id,
+                    CPF = beneficiario.CPF,
+                    Nome = beneficiario.Nome,
+                    IdCliente = beneficiario.IdCliente
+                };
             }
+
+            return View(model);
         }
 
         [HttpPost]
@@ -65,6 +64,33 @@ namespace WebAtividadeEntrevista.Controllers
         }
 
         [HttpPost]
+        public JsonResult Incluir(BeneficiarioModel model)
+        {
+            BoBeneficiario bo = new BoBeneficiario();
+
+            if (!this.ModelState.IsValid)
+            {
+                List<string> erros = (from item in ModelState.Values
+                                      from error in item.Errors
+                                      select error.ErrorMessage).ToList();
+
+                Response.StatusCode = 400;
+                return Json(string.Join(System.Environment.NewLine, erros));
+            }
+            else
+            {
+                model.Id = bo.Incluir(new Beneficiario()
+                {
+                    CPF = model.CPF,
+                    Nome = model.Nome,
+                    IdCliente = model.IdCliente
+                });
+
+                return Json(new { success = true, message = "Beneficiário incluído com sucesso!", beneficiarioId = model.Id });
+            }
+        }
+
+        [HttpPost]
         public JsonResult Excluir(long id)
         {
             BoBeneficiario bo = new BoBeneficiario();
@@ -73,13 +99,31 @@ namespace WebAtividadeEntrevista.Controllers
             return Json(new { success = true, message = "Beneficiário excluído com sucesso!" });
         }
 
-        [HttpGet]
-        public JsonResult ObterPorCliente(long clienteId)
+        [HttpPost]
+        public JsonResult BeneficiarioList(long clienteId, int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
         {
-            BoBeneficiario bo = new BoBeneficiario();
-            List<Beneficiario> beneficiarios = bo.ObterPorCliente(clienteId);
+            try
+            {
+                int qtd = 0;
+                string campo = string.Empty;
+                string crescente = string.Empty;
+                string[] array = jtSorting.Split(' ');
 
-            return Json(beneficiarios, JsonRequestBehavior.AllowGet);
+                if (array.Length > 0)
+                    campo = array[0];
+
+                if (array.Length > 1)
+                    crescente = array[1];
+
+                BoBeneficiario bo = new BoBeneficiario();
+                List<Beneficiario> beneficiarios = bo.Pesquisa(clienteId, jtStartIndex, jtPageSize, campo, crescente.Equals("ASC", System.StringComparison.InvariantCultureIgnoreCase), out qtd);
+
+                return Json(new { Result = "OK", Records = beneficiarios, TotalRecordCount = qtd });
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { Result = "ERROR", Message = ex.Message });
+            }
         }
     }
 }

@@ -2,12 +2,11 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title" id="beneficiarioModalLabel">Beneficiários</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h5 class="modal-title" id="beneficiarioModalLabel">Beneficiários</h5>
             </div>
-
             <div class="modal-body">
                 <div class="form-group">
                     <label for="cpfBeneficiario">CPF:</label>
@@ -17,12 +16,13 @@
                     <label for="nomeBeneficiario">Nome:</label>
                     <input type="text" class="form-control" id="nomeBeneficiario" placeholder="Ex.: Maria">
                 </div>
-                <button type="button" class="btn btn-success" onclick="incluirBeneficiario()">Incluir</button>
+                <button id="incluirBeneficiario" class="btn btn-success" type="button">Incluir</button>
                 <hr />
-
-                <!-- Aqui o grid será adicionado dinamicamente -->
-                <div id="beneficiarioGrid"></div>
+                <div id="gridBeneficiarios"></div>
             </div>
         </div>
     </div>
 </div>
+
+
+

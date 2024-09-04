@@ -44,6 +44,14 @@ namespace FI.WebAtividadeEntrevista
 
             bundles.Add(new StyleBundle("~/Content/jtable").Include(
                       "~/Scripts/jtable/themes/metro/darkgray/jtable.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/beneficiarios").Include(
+     "~/Scripts/Beneficiarios/FI.ListBeneficiarios.js",
+     "~/Scripts/Beneficiarios/FI.Beneficiarios.js",
+     "~/Scripts/Beneficiarios/FI.AltBeneficiarios.js"
+ ));
+
+            
         }
     }
 }
