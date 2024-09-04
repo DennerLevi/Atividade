@@ -52,13 +52,11 @@ namespace FI.AtividadeEntrevista.DAL
 
             return cli.FirstOrDefault();
         }
-
-        internal bool VerificarCPF(string CPF, long Id)
+        internal bool VerificarExistencia(string CPF)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
 
             parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", CPF));
-            parametros.Add(new System.Data.SqlClient.SqlParameter("Id", Id));
 
             DataSet ds = base.Consultar("FI_SP_VerificaCliente", parametros);
 

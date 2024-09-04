@@ -6,15 +6,10 @@
     <script>
     var urlAlteracao = '@Url.Action("Alterar", "Cliente", new { area = "" })';
     var urlClienteList = '@Url.Action("ClienteList", "Cliente", new { area = "" })';
-    var urlBeneficiarioList = '@Url.Action("AlterarBeneficiario", "Beneficiario", new { area = "" })';
 
     </script>
     @Scripts.Render("~/bundles/listClientes")
-    @Scripts.Render("~/bundles/beneficiarios")
 }
 <h2>@Html.Raw(ViewBag.Title)</h2>
 @Html.ActionLink("Novo Cliente", "Incluir", "Cliente", new { }, new { @class = "btn btn-sm btn-primary pull-right" })
-
 <table id="gridClientes" class="table"></table>
-
-

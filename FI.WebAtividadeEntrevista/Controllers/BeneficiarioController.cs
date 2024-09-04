@@ -1,5 +1,6 @@
 ﻿using FI.AtividadeEntrevista.BLL;
 using FI.AtividadeEntrevista.DML;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,66 +10,10 @@ namespace WebAtividadeEntrevista.Controllers
 {
     public class BeneficiarioController : Controller
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
-        public ActionResult ListBeneficiario()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public ActionResult AlterarBeneficiario(long id)
-        {
-            BoBeneficiario bo = new BoBeneficiario();
-            Beneficiario beneficiario = bo.Consultar(id);
-            BeneficiarioModel model = null;
-
-            if (beneficiario != null)
-            {
-                model = new BeneficiarioModel()
-                { 
-                    CPF = beneficiario.CPF,
-                    Nome = beneficiario.Nome,
-                };
-            }
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public JsonResult Alterar(BeneficiarioModel model)
-        {
-            BoBeneficiario bo = new BoBeneficiario();
-
-            if (!this.ModelState.IsValid)
-            {
-                List<string> erros = (from item in ModelState.Values
-                                      from error in item.Errors
-                                      select error.ErrorMessage).ToList();
-
-                Response.StatusCode = 400;
-                return Json(string.Join(System.Environment.NewLine, erros));
-            }
-            else
-            {
-                bo.Alterar(new Beneficiario()
-                {
-                    Id = model.Id,
-                    CPF = model.CPF,
-                    Nome = model.Nome,
-                    IdCliente = model.IdCliente
-                });
-
-                return Json(new { success = true, message = "Beneficiário alterado com sucesso!" });
-            }
-        }
-
         [HttpPost]
         public JsonResult Incluir(BeneficiarioModel model)
         {
-            BoBeneficiario bo = new BoBeneficiario();
+            BoBeneficiarios bo = new BoBeneficiarios();
 
             if (!this.ModelState.IsValid)
             {
@@ -77,10 +22,11 @@ namespace WebAtividadeEntrevista.Controllers
                                       select error.ErrorMessage).ToList();
 
                 Response.StatusCode = 400;
-                return Json(string.Join(System.Environment.NewLine, erros));
+                return Json(string.Join(Environment.NewLine, erros));
             }
             else
             {
+
                 model.Id = bo.Incluir(new Beneficiario()
                 {
                     CPF = model.CPF,
@@ -88,44 +34,69 @@ namespace WebAtividadeEntrevista.Controllers
                     IdCliente = model.IdCliente
                 });
 
-                return Json(new { success = true, message = "Beneficiário incluído com sucesso!", beneficiarioId = model.Id });
+
+                return Json("Cadastro efetuado com sucesso");
             }
         }
 
         [HttpPost]
-        public JsonResult Excluir(long id)
+        public JsonResult Alterar(BeneficiarioModel model)
         {
-            BoBeneficiario bo = new BoBeneficiario();
-            bo.Excluir(id);
+            BoBeneficiarios bo = new BoBeneficiarios();
 
-            return Json(new { success = true, message = "Beneficiário excluído com sucesso!" });
+            if (!this.ModelState.IsValid)
+            {
+                List<string> erros = (from item in ModelState.Values
+                                      from error in item.Errors
+                                      select error.ErrorMessage).ToList();
+
+                Response.StatusCode = 400;
+                return Json(string.Join(Environment.NewLine, erros));
+            }
+            else
+            {
+                bo.Alterar(new Beneficiario()
+                {
+                    CPF = model.CPF,
+                    Nome = model.Nome,
+                    IdCliente = model.IdCliente,
+                    Id = model.Id
+                });
+
+
+                return Json(new { success = true, message = "Cadastro alterado com sucesso" });
+            }
         }
 
         [HttpPost]
-        public JsonResult BeneficiarioList(long clienteId, int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
+        public JsonResult RemoveBeneficiario(long id)
         {
             try
             {
-                int qtd = 0;
-                string campo = string.Empty;
-                string crescente = string.Empty;
-                string[] array = jtSorting.Split(' ');
-
-                if (array.Length > 0)
-                    campo = array[0];
-
-                if (array.Length > 1)
-                    crescente = array[1];
-
-                BoBeneficiario bo = new BoBeneficiario();
-                List<Beneficiario> beneficiarios = bo.Pesquisa(clienteId, jtStartIndex, jtPageSize, campo, crescente.Equals("ASC", System.StringComparison.InvariantCultureIgnoreCase), out qtd);
-
-                return Json(new { Result = "OK", Records = beneficiarios, TotalRecordCount = qtd });
+                BoBeneficiarios boBen = new BoBeneficiarios();
+                boBen.Excluir(id);
+                return Json("Beneficiário deletado com sucesso.");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
         }
+
+        [HttpPost]
+        public JsonResult BeneficiarioList(long idCliente)
+        {
+            try
+            {
+                List<Beneficiario> ben = new BoBeneficiarios().Listar(idCliente);
+                return Json(ben, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = "ERROR", Message = ex.Message });
+            }
+        }
+
+
     }
 }
