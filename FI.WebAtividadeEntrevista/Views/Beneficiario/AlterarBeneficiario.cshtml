@@ -1,39 +1,14 @@
-﻿<div class="modal fade" id="beneficiarioModal" tabindex="-1" role="dialog" aria-labelledby="beneficiarioModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="beneficiarioModalLabel">Beneficiários</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        <label for="cpfBeneficiario">CPF:</label>
-                        <input type="text" class="form-control" id="cpfBeneficiario" placeholder="Ex.: 010.011.111-00">
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label for="nomeBeneficiario">Nome:</label>
-                        <input type="text" class="form-control" id="nomeBeneficiario" placeholder="Ex.: Maria">
-                    </div>
-                    <div class="form-group col-md-2 d-flex align-items-end">
-                        <button id="incluirBeneficiario" class="btn btn-success w-100" type="button">Incluir</button>
-                    </div>
-                </div>
-                <table class="table table-bordered table-hover">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>CPF</th>
-                            <th>Nome</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="gridBeneficiarios">
-                        <!-- Os dados serão inseridos dinamicamente aqui -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+﻿@model WebAtividadeEntrevista.Models.BeneficiarioModel
+@{
+    ViewBag.Title = "";
+}
+@section scripts{
+    <script>
+        var urlPost = '@Url.Action("AlterarBeneficiario", "Beneficiario", new { area = "" })';
+        var obj = @Html.Raw(Json.Encode(Model));
+        var urlRetorno = '@Url.Action("Index", "Beneficiario", new { area = "" })';
+    </script>
+    @Scripts.Render("~/bundles/altBeneficiarios")
+}
+<h2>@Html.Raw(ViewBag.Title)</h2>
+@Html.Partial("~/Views/Beneficiario/FormsBeneficiario.cshtml")

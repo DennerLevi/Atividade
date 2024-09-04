@@ -1,32 +1,33 @@
 $(document).ready(function () {
-    $('#alterarBeneficiario').click(function (e) {
-        e.preventDefault(); // Evitar submissão padrão do formulário
-
-        var id = $('#beneficiarioId').val(); // ID do beneficiário a ser alterado
-        var cpf = $('#cpfBeneficiario').val();
-        var nome = $('#nomeBeneficiario').val();
-        var clienteId = $('#clienteId').val();
-
-        $.ajax({
-            url: '/Beneficiario/Alterar',
-            type: 'POST',
-            data: {
-                Id: id,
-                CPF: cpf,
-                Nome: nome,
-                IdCliente: clienteId
+    if (document.getElementById("gridBeneficiarios"))
+        $('#gridBeneficiarios').jtable({
+            title: 'Beneficiários',
+            paging: true,
+            pageSize: 5, // Define o tamanho da página
+            sorting: true, // Habilita ordenação
+            defaultSorting: 'Nome ASC', // Ordenação padrão
+            actions: {
+                listAction: urlBeneficiarioList, // URL para carregar os beneficiários
             },
-            success: function (data) {
-                if (data.success) {
-                    $('#gridBeneficiarios').jtable('reload'); // Recarrega a lista de beneficiários
-                    $('#beneficiarioModal').modal('hide'); // Fecha o modal
-                } else {
-                    alert(data.message);
+            fields: {
+                CPF: {
+                    title: 'CPF',
+                    width: '30%'
+                },
+                Nome: {
+                    title: 'Nome',
+                    width: '50%'
+                },
+                Alterar: {
+                    title: '',
+                    display: function (data) {
+                        return '<button onclick="window.location.href=\'' + urlAlterarBeneficiario + '/' + data.record.Id + '\'" class="btn btn-primary btn-sm">TESTE</button>';
+                    }
                 }
-            },
-            error: function () {
-                alert('Erro ao alterar o beneficiário.');
             }
         });
-    });
+
+    // Carrega a lista de beneficiários ao abrir o modal
+    if (document.getElementById("gridBeneficiarios"))
+        $('#gridBeneficiarios').jtable('load', { clienteId: $('#clienteId').val() });
 });

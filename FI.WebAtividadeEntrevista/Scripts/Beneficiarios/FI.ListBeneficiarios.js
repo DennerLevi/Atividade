@@ -1,81 +1,45 @@
-$(document).ready(function () {
-    var urlBeneficiarioList = '@Url.Action("BeneficiarioList", "Beneficiario", new { area = "" })';
-    var urlIncluirBeneficiario = '@Url.Action("Incluir", "Beneficiario", new { area = "" })';
+function alterarBeneficiario(id) {
+    // Busca os dados do beneficiário pelo ID
+    $.ajax({
+        url: '@Url.Action("BuscarBeneficiario", "Beneficiario")', // Você precisará criar essa ação no controlador
+        type: 'GET',
+        data: { id: id },
+        success: function (data) {
+            if (data.success) {
+                // Preenche os campos do modal com os dados do beneficiário
+                $('#cpfBeneficiario').val(data.beneficiario.CPF);
+                $('#nomeBeneficiario').val(data.beneficiario.Nome);
 
-    // Inicializa o gridBeneficiarios quando o modal é aberto
-    $('#beneficiarioModal').on('show.bs.modal', function () {
-        $('#gridBeneficiarios').jtable({
-            title: 'Beneficiários',
-            paging: true,
-            pageSize: 5,
-            sorting: true,
-            defaultSorting: 'Nome ASC',
-            actions: {
-                listAction: urlBeneficiarioList,
-            },
-            fields: {
-                CPF: {
-                    title: 'CPF',
-                    width: '30%'
-                },
-                Nome: {
-                    title: 'Nome',
-                    width: '50%'
-                },
-                Alterar: {
-                    title: '',
-                    display: function (data) {
-                        return '<button onclick="alterarBeneficiario(' + data.record.Id + ')" class="btn btn-primary btn-sm">Alterar</button>';
-                    }
-                },
-                Excluir: {
-                    title: '',
-                    display: function (data) {
-                        return '<button onclick="excluirBeneficiario(' + data.record.Id + ')" class="btn btn-danger btn-sm">Excluir</button>';
-                    }
-                }
+                // Atualiza a função de inclusão para agora funcionar como uma atualização
+                $('#incluirBeneficiario').off('click').on('click', function () {
+                    $.ajax({
+                        url: '@Url.Action("Alterar", "Beneficiario")',
+                        type: 'POST',
+                        data: {
+                            Id: id,
+                            CPF: $('#cpfBeneficiario').val(),
+                            Nome: $('#nomeBeneficiario').val()
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                $('#gridBeneficiarios').jtable('reload');
+                                $('#cpfBeneficiario').val('');
+                                $('#nomeBeneficiario').val('');
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function () {
+                            alert('Erro ao alterar o beneficiário.');
+                        }
+                    });
+                });
+            } else {
+                alert('Erro ao buscar o beneficiário.');
             }
-        });
-
-        // Carrega a tabela com os beneficiários do cliente atual
-        $('#gridBeneficiarios').jtable('load', { clienteId: $('#clienteId').val() });
+        },
+        error: function () {
+            alert('Erro ao buscar o beneficiário.');
+        }
     });
-
-    // Função para incluir novo beneficiário
-    $('#incluirBeneficiario').click(function () {
-        var cpf = $('#cpfBeneficiario').val();
-        var nome = $('#nomeBeneficiario').val();
-        var clienteId = $('#clienteId').val();
-
-        $.ajax({
-            url: urlIncluirBeneficiario,
-            type: 'POST',
-            data: {
-                CPF: cpf,
-                Nome: nome,
-                IdCliente: clienteId
-            },
-            success: function (data) {
-                if (data.success) {
-                    $('#gridBeneficiarios').jtable('reload');
-                    $('#cpfBeneficiario').val('');
-                    $('#nomeBeneficiario').val('');
-                } else {
-                    alert(data.message);
-                }
-            },
-            error: function () {
-                alert('Erro ao incluir o beneficiário.');
-            }
-        });
-    });
-
-    // Funções para alterar e excluir beneficiário
-    function alterarBeneficiario(id) {
-        // Lógica para alterar beneficiário
-    }
-
-    function excluirBeneficiario(id) {
-        // Lógica para excluir beneficiário
-    }
-});
+}
